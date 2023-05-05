@@ -17,8 +17,10 @@ class Snake:
         self.size = size
         self.surface = surface
         self.color = color
+
         self.die_sound = pygame.mixer.Sound("./assets/lose.wav")
         self.eat_sound = pygame.mixer.Sound("./assets/eat.wav")
+        self.cancel_sound = pygame.mixer.Sound("./assets/cancel.mp3")
 
         self.reset()
 
@@ -51,6 +53,20 @@ class Snake:
             current_block = current_block + 1
 
     def set_direction(self, direction):
+        # You can't move in the OPPOSITE direction to the direction you're currently facing
+        if (self.direction == Direction.LEFT and direction == Direction.RIGHT):
+            self.cancel_sound.play()
+            return
+        elif (self.direction == Direction.RIGHT and direction == Direction.LEFT):
+            self.cancel_sound.play()
+            return
+        elif (self.direction == Direction.UP and direction == Direction.DOWN):
+            self.cancel_sound.play()
+            return
+        elif (self.direction == Direction.DOWN and direction == Direction.UP):
+            self.cancel_sound.play()
+            return
+
         self.direction = direction
 
     def move(self):
@@ -106,15 +122,15 @@ class Snake:
         first_block = self.blocks[0]
 
         top_left_collision = self.did_collide(Coord(first_block.x, first_block.y), apple)
-        top_right_collision = self.did_collide(Coord(first_block.x + self.size, first_block.y), apple)
-        bottom_left_collision = self.did_collide(Coord(first_block.x, first_block.y + self.size), apple)
-        bottom_right_collision = self.did_collide(Coord(first_block.x + self.size, first_block.y + self.size), apple)
+        top_right_collision = self.did_collide(Coord(first_block.x, first_block.y), apple)
+        bottom_left_collision = self.did_collide(Coord(first_block.x, first_block.y), apple)
+        bottom_right_collision = self.did_collide(Coord(first_block.x, first_block.y), apple)
 
         return top_left_collision or top_right_collision or bottom_left_collision or bottom_right_collision
 
     def did_collide(self, coord, apple):
-        point_x = coord.x
-        point_y = coord.y
+        point_x = apple.x
+        point_y = apple.y
 
-        # todo: Should we look for collisions between the apple and the snake instead? Since the apple is smaller?
-        return (point_x > apple.x and point_x < apple.x + apple.size) and (point_y > apple.y and point_y < apple.y + apple.size)
+        # We look for collisions between the apple and the snake instead? Since the apple is smaller?
+        return (point_x > coord.x and point_x < coord.x + self.size) and (point_y > coord.y and point_y < coord.y + self.size)
