@@ -18,12 +18,22 @@ class Snake:
         self.surface = surface
         self.color = color
         self.die_sound = pygame.mixer.Sound("./assets/lose.wav")
+        self.eat_sound = pygame.mixer.Sound("./assets/eat.wav")
 
         self.reset()
 
     def die(self):
         self.die_sound.play()
         self.reset()
+
+    def eat(self):
+        self.eat_sound.play()
+        self.length = self.length + 1
+
+        # add another block
+        last_block = self.blocks[len(self.blocks) - 1]
+        new_block_pos = Coord(last_block.x, last_block.y)
+        self.blocks.append(new_block_pos) # will this work?
 
     def reset(self):
         self.length = 5
@@ -64,6 +74,8 @@ class Snake:
         while current_block_index < len(self.blocks):
             prev_pos = self.move_block(self.blocks[current_block_index], prev_pos)
             current_block_index = current_block_index + 1
+
+    
         
     def move_block(self, block, new_pos):
         prev_pos = Coord(block.x, block.y)
@@ -89,3 +101,20 @@ class Snake:
                 first_block.y < 0 or
                 first_block.x + self.size > self.surface.get_width() or
                 first_block.y + self.size > self.surface.get_height())
+    
+    def eating_apple(self, apple):
+        first_block = self.blocks[0]
+
+        top_left_collision = self.did_collide(Coord(first_block.x, first_block.y), apple)
+        top_right_collision = self.did_collide(Coord(first_block.x + self.size, first_block.y), apple)
+        bottom_left_collision = self.did_collide(Coord(first_block.x, first_block.y + self.size), apple)
+        bottom_right_collision = self.did_collide(Coord(first_block.x + self.size, first_block.y + self.size), apple)
+
+        return top_left_collision or top_right_collision or bottom_left_collision or bottom_right_collision
+
+    def did_collide(self, coord, apple):
+        point_x = coord.x
+        point_y = coord.y
+
+        # todo: Should we look for collisions between the apple and the snake instead? Since the apple is smaller?
+        return (point_x > apple.x and point_x < apple.x + apple.size) and (point_y > apple.y and point_y < apple.y + apple.size)

@@ -1,10 +1,12 @@
 import pygame
 from grid import *
 from snake import *
+from apple import *
  
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
+GREEN = (0, 255, 0)
  
 # initialize pygame
 pygame.init()
@@ -19,6 +21,7 @@ clock = pygame.time.Clock()
  
 grid = Grid(50, screen, RED)
 snake = Snake(50, screen, WHITE)
+apple = Apple(25, screen, GREEN)
 
 pygame.mixer.music.load("./assets/bgm.mp3")
 #pygame.mixer.music.play(-1)
@@ -38,6 +41,9 @@ while running:
                 snake.set_direction(Direction.UP)
             elif event.key == pygame.K_DOWN:
                 snake.set_direction(Direction.DOWN)
+                
+            elif event.key == pygame.K_a:
+                apple.reset()
             
         if event.type == pygame.QUIT:
             running = False
@@ -46,11 +52,16 @@ while running:
     snake.move()
     if snake.out_of_bounds():
         snake.die()
+    elif snake.eating_apple(apple):
+        apple.reset()
+        snake.eat()
+    # todo: If the head touches any part of the body, the snake also dies
      
     # drawing logic
     screen.fill(BLACK)
     grid.draw()
     snake.draw()
+    apple.draw()
     pygame.display.flip()
     
     # how many updates per second
