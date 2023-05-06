@@ -30,6 +30,8 @@ pygame.mixer.music.play(-1)
 running = True
 paused = False
 while running:
+    print("loop")
+
     # event handling
     for event in pygame.event.get():
         if event.type == pygame.KEYDOWN:
@@ -56,25 +58,23 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-    # game logic
-    if paused:
-        continue
-
-    snake.move()
-    if snake.out_of_bounds():
-        snake.die("Out of bounds!")
-    elif snake.eating_self():
-        snake.die("Collision with self!")
-    elif snake.eating_apple(apple):
-        apple.reset()
-        snake.eat()
+    if not paused:
+        # game logic
+        snake.move()
+        if snake.out_of_bounds():
+            snake.die("Out of bounds!")
+        elif snake.eating_self():
+            snake.die("Collision with self!")
+        elif snake.eating_apple(apple):
+            apple.reset()
+            snake.eat()
      
-    # drawing logic
-    screen.fill(BLACK)
-    grid.draw()
-    snake.draw()
-    apple.draw()
-    pygame.display.flip()
+        # drawing logic
+        screen.fill(BLACK)
+        grid.draw()
+        snake.draw()
+        apple.draw()
+        pygame.display.flip()
     
     # how many updates per second
     clock.tick(1)
