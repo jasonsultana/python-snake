@@ -1,20 +1,11 @@
 import pygame
-from enum import Enum
+from coord import Coord
+from direction import Direction
+from square import Square
 
-class Direction(Enum):
-    LEFT = 0
-    RIGHT = 1
-    UP = 2
-    DOWN = 3
-
-class Coord:
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
-    
-class Snake:
+class Snake(Square):
     def __init__(self, size, surface, color):
-        self.size = size
+        super().__init__(0, 0, size)
         self.surface = surface
         self.color = color
 
@@ -83,16 +74,13 @@ class Snake:
             first_block.y += self.size
         else:
             raise Exception(f"Direction {self.direction} not supported.")
-        
-        #todo: each block after the first block needs to be set to the co-ords of the block after it
+
         current_block_index = 1
 
         while current_block_index < len(self.blocks):
             prev_pos = self.move_block(self.blocks[current_block_index], prev_pos)
             current_block_index = current_block_index + 1
 
-    
-        
     def move_block(self, block, new_pos):
         prev_pos = Coord(block.x, block.y)
 
@@ -101,9 +89,7 @@ class Snake:
 
         return prev_pos
 
-    def draw(self):            
-        #pygame.draw.rect(self.surface, self.color, (self.x, self.y, self.size, self.size))
-        
+    def draw(self):                    
         blocks_drawn = 0
         while blocks_drawn < len(self.blocks):
             current_block = self.blocks[blocks_drawn]

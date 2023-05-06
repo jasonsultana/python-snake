@@ -1,12 +1,13 @@
 import pygame
 import random
+from square import Square
 
-class Apple:
+class Apple(Square):
     def __init__(self, size, surface, color):
-        self.size = size
+        super().__init__(0, 0, size)
+
         self.surface = surface
         self.color = color
-
         self.reset()
 
     def reset(self):
@@ -19,7 +20,6 @@ class Apple:
         print(f"Apple x: {self.x}, Apple y: {self.y}")
 
     def draw(self):            
-        # todo: Can we center this?
         pygame.draw.rect(self.surface, self.color, (self.x, self.y, self.size, self.size))
 
     def round_to(self, x, base = 5):
