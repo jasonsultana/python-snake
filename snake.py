@@ -2,6 +2,7 @@ import pygame
 from coord import Coord
 from direction import Direction
 from square import Square
+from utils import Utils
 
 class Snake(Square):
     # Initialisation
@@ -22,7 +23,7 @@ class Snake(Square):
         self.direction = Direction.RIGHT
         
         start_x = (self.length * self.size) + self.size
-        start_y = self.surface.get_height() / 2 # todo: round this to the closest 50
+        start_y = Utils.round_to(self.surface.get_height() / 2, self.size)
 
         # position the blocks
         self.blocks = [Square(start_x, start_y, self.size)]
