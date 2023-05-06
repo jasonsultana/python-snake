@@ -126,7 +126,7 @@ class Snake(Square):
         return False    
 
     def die(self, reason):
-        print(f"You died! Reason: {reason}")
+        print(f"You died! Reason: {reason}. Snake length: {len(self.blocks)}")
         self.die_sound.play()
         self.reset()
 

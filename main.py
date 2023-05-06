@@ -24,9 +24,11 @@ snake = Snake(50, screen, WHITE)
 apple = Apple(25, screen, GREEN)
 
 pygame.mixer.music.load("./assets/bgm2.mp3")
+pygame.mixer.music.set_volume(0.5)
 pygame.mixer.music.play(-1)
 
 running = True
+paused = False
 while running:
     # event handling
     for event in pygame.event.get():
@@ -40,13 +42,24 @@ while running:
             elif event.key == pygame.K_DOWN:
                 snake.set_direction(Direction.DOWN)
 
+            # cheat codes
             elif event.key == pygame.K_a:
                 apple.reset()
+            elif event.key == pygame.K_p:
+                paused = not paused
+                if paused:
+                    pygame.mixer.music.pause()
+                    continue
+                else:
+                    pygame.mixer.music.play(-1)
             
         if event.type == pygame.QUIT:
             running = False
 
     # game logic
+    if paused:
+        continue
+
     snake.move()
     if snake.out_of_bounds():
         snake.die("Out of bounds!")
