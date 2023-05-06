@@ -21,7 +21,7 @@ clock = pygame.time.Clock()
  
 grid = Grid(50, screen, RED)
 snake = Snake(50, screen, WHITE)
-apple = Apple(25, screen, GREEN)
+apple = Apple(25, 50, screen, GREEN)
 
 pygame.mixer.music.load("./assets/bgm2.mp3")
 pygame.mixer.music.set_volume(0.5)
